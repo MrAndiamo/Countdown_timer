@@ -27,14 +27,12 @@ function config() {
     // Add time here
     config['days_add'] = 0;
     config['hours_add'] = 0;
-    config['minutes_add'] = 0;
-    config['seconds_add'] = 10;
+    config['minutes_add'] = 1;
+    config['seconds_add'] = 20;
 
 
     return config;
 }
-
-
 
 
 /**
@@ -43,7 +41,6 @@ function config() {
  * Doesn't return anything, but fills the divs with new data
  */
 function CountdownTimer() {
-
 
     var config = this.config();
 
@@ -55,22 +52,26 @@ function CountdownTimer() {
     var dateNow = new Date();
     var hour = dateNow.getHours();
     var minutes = dateNow.getMinutes();
-    var seconds = dateNow.getSeconds() + 2;
+    var seconds = dateNow.getSeconds();
     
     // Set new timer
     var timerLocation = 'bottom'; // top/bottom/left/right
     var countDownDate = dateNow.setDate(dateNow.getDate() + config.days_add);
     var countDownDate = dateNow.setHours(hour + config.hours_add);
     var countDownDate = dateNow.setMinutes(minutes + config.minutes_add);
-    var countDownDate = dateNow.setSeconds(seconds + (config.seconds_add));
+    var countDownDate = dateNow.setSeconds(dateNow.getSeconds() + config.seconds_add + 1);
     
     // Calculate dinstance to endTime in second 
     var now = new Date().getTime();
     var distance = countDownDate - now;
-
+    
     // Calculate bar_part width per second
-    var distance_bar_part =  (config.bar_width / distance) * 1000;
-    distance_bar_part = Math.round(distance_bar_part * 100) / 100;
+
+    console.log(config.bar_width);
+    var distance_bar_part =  ((config.bar_width / (distance - 1000)) * 1000);
+    distance_bar_part = Math.ceil(distance_bar_part * 100) / 100;
+    
+    console.log(distance_bar_part);
 
     if(timerLocation == 'top') {
 
@@ -81,8 +82,8 @@ function CountdownTimer() {
     } else {
 
     }
-    var countdownBarWidth = distance_bar_part;
-
+    var countdownBarWidth = 0;
+    
     // Update the count down every 1 secondx
     var CountdownInterval = setInterval(function() {
 
@@ -98,11 +99,10 @@ function CountdownTimer() {
         } else {
             var timer = 0;
         }
-    
+        
         // Update the timer div HTML contents to the new time
         var timerHtml = '<span style="font-family: ' + config.timer_font + '; font-size: ' + config.timer_font_size + 'px;">' + 'Time left: ' + timer + '</span>';
         $("#" + config.loading_timer_id).html(timerHtml);
-
         
         // Countdown bar Width
         countdownBarWidth = countdownBarWidth + distance_bar_part;
@@ -119,8 +119,7 @@ function CountdownTimer() {
             clearInterval(CountdownInterval);
             $("#" + config.loading_timer_id).html("Time expired!");
         }
-
-
+        
 
     }, 1000);
 
