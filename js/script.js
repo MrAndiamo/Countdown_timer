@@ -12,13 +12,16 @@ function config() {
     
     
     // Countdown bar
-    config['bar_width'] = 300;
+    config['bar_width'] = 200;
+    config['bar_height'] = 10;
+    
     config['border'] = 'rgb(233, 8, 8)';
     config['background_color'] =  'rgba(189, 184, 184, 0.788)';
     config['finished_message'] = '';
 
     // Countdown timer
-    config['timer_font'] = 'Arial';
+    config['timer_font'] = 'Verdana';
+    config['timer_font_size'] = 12;
 
 
     // Add time here
@@ -43,6 +46,10 @@ function CountdownTimer() {
 
 
     var config = this.config();
+
+    //set bar-width
+    $("#" + config.loading_bar_id).css('width', config.bar_width);
+    $("#" + config.loading_bar_id).css('height', config.bar_height);
 
     // Set the date we're counting down to
     var datenow = new Date();
@@ -83,7 +90,7 @@ function CountdownTimer() {
         }
     
         // Update the timer div HTML contents to the new time
-        $("#" + config.loading_timer_id).html("Time left: " + timer);
+        $("#" + config.loading_timer_id).html('<span style="font-family: ' + config.timer_font + '; font-size: ' + config.timer_font_size + 'px;">' + 'Time left: ' + timer + '</span>');
 
         
         // COUNTDOWN BAR
