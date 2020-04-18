@@ -13,7 +13,7 @@ function config() {
     
     // Countdown bar
     config['bar_width'] = 200;
-    config['bar_height'] = 10;
+    config['bar_height'] = 20;
     
     config['border'] = 'rgb(233, 8, 8)';
     config['background_color'] =  'rgba(189, 184, 184, 0.788)';
@@ -25,10 +25,10 @@ function config() {
 
 
     // Add time here
-    config['days_add'] = 1;
+    config['days_add'] = 0;
     config['hours_add'] = 0;
     config['minutes_add'] = 0;
-    config['seconds_add'] = 20;
+    config['seconds_add'] = 10;
 
 
     return config;
@@ -52,24 +52,25 @@ function CountdownTimer() {
     $("#" + config.loading_bar_id).css('height', config.bar_height);
 
     // Set the date we're counting down to
-    var datenow = new Date();
-    var hour = datenow.getHours();
-    var minutes = datenow.getMinutes();
-    var seconds = datenow.getSeconds();
+    var dateNow = new Date();
+    var hour = dateNow.getHours();
+    var minutes = dateNow.getMinutes();
+    var seconds = dateNow.getSeconds() + 2;
     
     // Set new timer
     var timerLocation = 'bottom'; // top/bottom/left/right
-    var countDownDate = datenow.setDate(datenow.getDate() + config.days_add);
-    var countDownDate = datenow.setHours(hour + config.hours_add);
-    var countDownDate = datenow.setMinutes(minutes + config.minutes_add);
-    var countDownDate = datenow.setSeconds(seconds + (config.seconds_add));
+    var countDownDate = dateNow.setDate(dateNow.getDate() + config.days_add);
+    var countDownDate = dateNow.setHours(hour + config.hours_add);
+    var countDownDate = dateNow.setMinutes(minutes + config.minutes_add);
+    var countDownDate = dateNow.setSeconds(seconds + (config.seconds_add));
     
     // Calculate dinstance to endTime in second 
     var now = new Date().getTime();
     var distance = countDownDate - now;
 
     // Calculate bar_part width per second
-    var distance_bar_part =  config.bar_width / distance;
+    var distance_bar_part =  (config.bar_width / distance) * 1000;
+    distance_bar_part = Math.round(distance_bar_part * 100) / 100;
 
     if(timerLocation == 'top') {
 
@@ -80,7 +81,7 @@ function CountdownTimer() {
     } else {
 
     }
-    var countdownBarWidth = 0;
+    var countdownBarWidth = distance_bar_part;
 
     // Update the count down every 1 secondx
     var CountdownInterval = setInterval(function() {
@@ -103,8 +104,8 @@ function CountdownTimer() {
         $("#" + config.loading_timer_id).html(timerHtml);
 
         
-        // COUNTDOWN BAR
-        countdownBarWidth = countdownBarWidth + (distance_bar_part * 1000);
+        // Countdown bar Width
+        countdownBarWidth = countdownBarWidth + distance_bar_part;
         
         // If timer is under 0, make it 0
         if (distance < 0) {
@@ -150,12 +151,8 @@ function setTimer(distance) {
         seconds = "0" + seconds;
     }
 
-    if(hours !== "00" ) {
-        var timeLeft = hours + ":" + minutes + ":" + seconds;
-    } else {
-        var timeLeft = minutes + ":" + seconds;
-    }
-
+    var timeLeft = hours + ":" + minutes + ":" + seconds;
+    
     if(days !== 0) {
 
         if(days === 1) {
