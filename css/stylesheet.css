@@ -5,15 +5,11 @@ div#main {
 }
 
 div#main div#countdown-position {
-    position: absolute;
-    left: 50%;
-    margin-left: -400px;
-    padding-top: 50px;
+    padding-top: 20px;
     padding-left: 50px; 
     margin-top: 50px;
     width: 800px;
-    height: 100px;
-    border: 1px solid black;
+    
 }
 
 div#countdown-bar {

@@ -18,14 +18,14 @@ function config() {
     config['finished_message'] = '';
 
     // Countdown timer
-
+    config['timer_font'] = 'Arial';
 
 
     // Add time here
     config['days_add'] = 0;
     config['hours_add'] = 0;
-    config['minutes_add'] = 0;
-    config['seconds_add'] = 5;
+    config['minutes_add'] = 1;
+    config['seconds_add'] = 30;
 
 
     return config;
@@ -54,48 +54,48 @@ function CountdownTimer() {
     var countDownDate = datenow.setDate(datenow.getDate() + config.days_add);
     var countDownDate = datenow.setHours(hour + config.hours_add);
     var countDownDate = datenow.setMinutes(minutes + config.minutes_add);
-    var countDownDate = datenow.setSeconds(seconds + (config.seconds_add + 2));
+    var countDownDate = datenow.setSeconds(seconds + (config.seconds_add));
     
+    // Calculate dinstance to endTime in second 
     var now = new Date().getTime();
+    var distance = countDownDate - now;
 
-    var distance_start  = countDownDate - now;
+    // Calculate bar_part width per second
+    var distance_bar_part =  config.bar_width / distance;
+
+
+    var countdownBarWidth = 0;
 
     // Update the count down every 1 second
     var CountdownInterval = setInterval(function() {
 
-        
+        // Get current time
         var now = new Date().getTime();
 
-
-        // Find the distance between now and the count down date
+        // Find the distance between now and the countdown time
         var distance = countDownDate - now;
-
-        // Set timer
+    
+        // SET TIMER if there is still some seconds left
         if(distance > 0) {
-           var timer = setTimer(distance);
+            var timer = setTimer(distance);
         } else {
-            timer = 0;
+            var timer = 0;
         }
-
-
+    
         // Update the timer div HTML contents to the new time
         $("#" + config.loading_timer_id).html("Time left: " + timer);
 
-        var onePercentOfDistance =  distance / config.bar_width;
-        var countdownBarWidth = 100 - onePercentOfDistance;
         
-        if (countdownBarWidth <= 0) {
-            countdownBarWidth = 100;
-        }
+        // COUNTDOWN BAR
+        countdownBarWidth = countdownBarWidth + (distance_bar_part * 1000);
         
-        if (distance <= 0) {
+        // If timer is under 0, make it 0
+        if (distance < 0) {
             distance = 0;
-            countdownBarWidth = 100;
         }
-
-        $countdownBarWidth = config.bar_width;
-        if(countdownBarWidth < 100) {
-            $("#" + config.loading_bar_id + ' #countdown-bar-loader').animate({ width: countdownBarWidth + '%' }, 500);
+        
+        if(countdownBarWidth < config.bar_width) {
+            $("#" + config.loading_bar_id + ' #countdown-bar-loader').animate({ width: countdownBarWidth + 'px' }, 500);
         } else {
             $("#" + config.loading_bar_id + ' #countdown-bar-loader').animate({ width: '100%' }, 500);
             clearInterval(CountdownInterval);
@@ -154,21 +154,3 @@ function setTimer(distance) {
     return timeLeftFinal;
 }
 
-
-function getSeconds(time) {
-
-
-
-}
-
-
-
-function getDistance(distance) {
-
-    var timer = {};
-    timer['days'] = Math.floor(distance / (1000 * 60 * 60 * 24));
-    timer['hours'] = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    timer['minutes'] = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    timer['seconds'] = Math.floor((distance % (1000 * 60)) / 1000);
-    return timer;
-}
