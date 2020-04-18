@@ -1,0 +1,35 @@
+div#main {
+    width: 100%;
+    
+    
+}
+
+div#main div#countdown-position {
+    position: absolute;
+    left: 50%;
+    margin-left: -400px;
+    padding-top: 50px;
+    padding-left: 50px; 
+    margin-top: 50px;
+    width: 800px;
+    height: 100px;
+    border: 1px solid black;
+}
+
+div#countdown-bar {
+    width: 300px;
+    height: 20px;
+    border: 1px solid rgb(233, 8, 8);
+    background-color: rgba(189, 184, 184, 0.788);
+}
+
+div#countdown-bar #countdown-bar-loader {
+    background-color: rgba(88, 5, 5, 0.788);
+    width: 10px; 
+    height: 100%
+}
+
+div#countdown-timer {
+    width: 300px;
+    height: 20px;
+}
