@@ -25,10 +25,10 @@ function config() {
 
 
     // Add time here
-    config['days_add'] = 0;
+    config['days_add'] = 1;
     config['hours_add'] = 0;
-    config['minutes_add'] = 1;
-    config['seconds_add'] = 30;
+    config['minutes_add'] = 0;
+    config['seconds_add'] = 20;
 
 
     return config;
@@ -58,6 +58,7 @@ function CountdownTimer() {
     var seconds = datenow.getSeconds();
     
     // Set new timer
+    var timerLocation = 'bottom'; // top/bottom/left/right
     var countDownDate = datenow.setDate(datenow.getDate() + config.days_add);
     var countDownDate = datenow.setHours(hour + config.hours_add);
     var countDownDate = datenow.setMinutes(minutes + config.minutes_add);
@@ -70,10 +71,18 @@ function CountdownTimer() {
     // Calculate bar_part width per second
     var distance_bar_part =  config.bar_width / distance;
 
+    if(timerLocation == 'top') {
 
+    } else if(timerLocation == 'left') {
+
+    } else if(timerLocation == 'right') {
+
+    } else {
+
+    }
     var countdownBarWidth = 0;
 
-    // Update the count down every 1 second
+    // Update the count down every 1 secondx
     var CountdownInterval = setInterval(function() {
 
         // Get current time
@@ -90,7 +99,8 @@ function CountdownTimer() {
         }
     
         // Update the timer div HTML contents to the new time
-        $("#" + config.loading_timer_id).html('<span style="font-family: ' + config.timer_font + '; font-size: ' + config.timer_font_size + 'px;">' + 'Time left: ' + timer + '</span>');
+        var timerHtml = '<span style="font-family: ' + config.timer_font + '; font-size: ' + config.timer_font_size + 'px;">' + 'Time left: ' + timer + '</span>';
+        $("#" + config.loading_timer_id).html(timerHtml);
 
         
         // COUNTDOWN BAR
@@ -149,9 +159,9 @@ function setTimer(distance) {
     if(days !== 0) {
 
         if(days === 1) {
-            var timeLeftFinal = days + " day " + timeLeft;
+            var timeLeftFinal = days + " day + " + timeLeft;
         } else {
-            var timeLeftFinal = days + " days " + timeLeft;
+            var timeLeftFinal = days + " days + " + timeLeft;
         }
     
     } else {
