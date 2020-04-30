@@ -1,24 +1,19 @@
 /**
  * Config Settings
+ * 
+ * @returns {array}
  */
 function config() {
     
     var $config = [];
-    
-    
-    /**
-     * Default General Settings
-     * @todo: get these ID's from the elements starting with class countdown-bar)
-     * 
-     */
-    $loadingBars = 'countdown-bar';
+    $config.loadingBars = '.countdown-bar';
    
     // Countdown Loading Bar
-    $loadingBars_width = 200;
-    $loadingBars_height = 20;
-    $loadingBars_border_color = 'blue';
-    $loadingBars_color =  'darkblue';
-    $loadingBars_background_color =  'lightblue';
+    $config.loadingBars_width = 200;
+    $config.loadingBars_height = 20;
+    $config.loadingBars_border_color = 'blue';
+    $config.loadingBars_color =  'darkblue';
+    $config.loadingBars_background_color =  'lightblue';
     $config.finished_message = '';
     
     // Countdown Timer
@@ -27,133 +22,96 @@ function config() {
     $config.timer_font = 'Verdana';
     $config.timer_font_size = 12;
     $config.endtime_message = 'Timer expired!';
-    
-    
-    // DEFAULT TIME IS 20 SECONDS
-    $config.days_add = 0;
-    $config.hours_add = 0;
-    $config.minutes_add = 0;
-    $config.seconds_add = 20;
 
     return $config;
 }
 
 
 /**
- * Counterdown Timer Counter
+ * Set countdown element
  * 
- * Doesn't return anything, but fills the divs with new data
+ * Element should be build as 
+ * <div class="countdownbar" id="elementID">
+ * <div></div>
+ * <div></div>
+ * </div>
+ * 
+ * Then call the function countdown('elementID', 0, 0, 0, 10)
+ * 
+ * @param {string} $element 
+ * @param {number} $daysAdd 
+ * @param {number} $hoursAdd 
+ * @param {number} $minutesAdd 
+ * @param {number} $secondsAdd 
  */
-function countdownTimer() {
+function countdown($element, $daysAdd, $hoursAdd, $minutesAdd, $secondsAdd) {
 
     $config = this.config();
 
+    $($config.loadingBars).css('width', $config.loadingBars_width);
+    $($config.loadingBars).css('height', $config.loadingBars_height);
+    $($config.loadingBars).css('background-color', $config.loadingBars_background_color);
+    $($config.loadingBars).css('border-color', $config.loadingBars_border_color);
     
-    $loadingBars = $('.countdown-bar');
-    
-    // foreach through the loadingbars
-    
-    $.each($('.countdown-bar'), function( index, value ) {
-        console.log('show shit' + index);
-
-
-        $loadingBars_loader = $($loadingBars[index]).children('div')[0];
-        $loadingBars_timer = $($loadingBars[index]).children('div')[1];
-    
-        $($loadingBars).css('width', $loadingBars_width);
-        $($loadingBars).css('height', $loadingBars_height);
-        $($loadingBars).css('background-color', $loadingBars_background_color);
-    
-    });
-    
-    
-
-    //set bar-settings
-    $($loadingBars_loader).css('background-color', $loadingBars_color);
-
-    $($loadingBars).css('border-color', $loadingBars_border_color);
-
- 
-    // Set the date we're counting down to
     $dateNow = new Date();
     $hour = $dateNow.getHours();
     $minute = $dateNow.getMinutes();
     $second = $dateNow.getSeconds();
-    
-    // Set new timer
-    $timerLocation = 'bottom'; // top/bottom/left/right
-    $$countDownDate = $dateNow.setDate($dateNow.getDate() + $config.days_add);
-    $countDownDate = $dateNow.setHours($hour + $config.hours_add);
-    $countDownDate = $dateNow.setMinutes($minute + $config.minutes_add);
-    $countDownDate = $dateNow.setSeconds($second + $config.seconds_add + 1);
-    
-    // Calculate dinstance to endTime in second 
-    $now = new Date().getTime();
-    $distance = $countDownDate - $now;
-    
-    // Calculate loadingBar_part width per second
-    $distance_loadingBar_part =  (($loadingBars_width / ($distance - 1000)) * 1000);
-    $distance_loadingBar_part = Math.ceil($distance_loadingBar_part * 100) / 100;
-    
-    if($timerLocation == 'top') {
-
-    } else if($timerLocation == 'left') {
-
-    } else if($timerLocation == 'right') {
-
-    } else {
-
-    }
-    $countdownBarWidth = 0;
-    
-    // Update the count down every 1 secondx
-    $countdownInterval = setInterval(function() {
-
-        // Get current time
-        $now = new Date().getTime();
-
-        // Find the $distance between now and the countdown time
-        $distance = $countDownDate - $now;
-    
-        // SET TIMER if there is still some seconds left
-        if($distance > 0) {
-            $timer = setTimer($distance);
-        } else {
-            $timer = 0;
-        }
+    $now_loader = new Date().getTime();
         
+    var interval = setInterval(function() {
+
+        $countDownDate = $dateNow.setDate($dateNow.getDate() + $daysAdd);
+        $countDownDate = $dateNow.setHours($hour + $hoursAdd);
+        $countDownDate = $dateNow.setMinutes($minute + $minutesAdd);
+        $countDownDate = $dateNow.setSeconds($second + $secondsAdd + 1);
+        
+        $now = new Date().getTime();    
+        $distance = $countDownDate - $now;
+        
+        $loadingBars_loader = $('#' + $element).children('div')[0];
+        $loadingBars_timer = $('#' + $element).children('div')[1];      
+
+        $distance_loader = $countDownDate - $now_loader;
+        $distance_loadingBar_part =  (($config.loadingBars_width / ($distance_loader - 1000)) * 1000);
+        $distance_loadingBar_part = Math.ceil($distance_loadingBar_part * 100) / 100;
+        
+        $secondsPast = parseInt(($distance_loader - $distance) / 1000);
+        
+        $newDistance  = $distance_loadingBar_part * $secondsPast;
+        if($newDistance > $config.loadingBars_width) $newDistance = $config.loadingBars_width;
+        
+        $($loadingBars_loader).animate({ width: $newDistance + 'px' }, 500);
+         
+        // TIMER
         $timerHtmlStart = '<span style="color: ' + $config.timer_color + '; font-weight: ' + $config.timer_font_weight + '; font-family: ' + $config.timer_font + '; font-size: ' + $config.timer_font_size + 'px;">';
         $timerHtmlEnd = '</span>';
+        
+        
+        // set loading bar background-color as set in config
+        $($loadingBars_loader).css('background-color', $config.loadingBars_color);    
 
+        $($loadingBars_timer).css('width', $config.loadingBars_width);
+        $($loadingBars_timer).css('height', $config.loadingBars_height);
         
-        // Countdown bar Width
-        $countdownBarWidth = $countdownBarWidth + $distance_loadingBar_part;
-        
-        // If timer is under 0, make it 0
-        if ($distance < 0) {
-            $distance = 0;
-        }
-        
-        if($countdownBarWidth < $loadingBars_width) {
-            // Update the timer div HTML contents to the new time
-            $timerHtml = $timerHtmlStart + 'Time left: ' + $timer + $timerHtmlEnd;
-            $($loadingBars_timer).html($timerHtml);
+        if($distance <= 0) $distance = 0;
 
-            // Make this a function so it both loads simultanious?
-            $($loadingBars_loader).animate({ width: $countdownBarWidth + 'px' }, 500);
-    
+        if($distance === 0) {
+                $($loadingBars_timer).html($timerHtmlStart + $config.endtime_message + $timerHtmlEnd);
+                     
+                clearInterval(interval);
+                return;
         } else {
-            $($loadingBars_loader).animate({ width: '100%' }, 500);
-            clearInterval($countdownInterval);
+
+            $timeLeftFinal = setTimer($distance);
+
+            $($loadingBars_timer).html($timerHtmlStart + $timeLeftFinal + $timerHtmlEnd);
             
-            $timerHtml = $timerHtmlStart + $config.endtime_message + $timerHtmlEnd;
-            $($loadingBars_timer).html($timerHtml);
-        }
-        
-
+        }   
     }, 1000);
-
 }
+
+
 
 
 /**

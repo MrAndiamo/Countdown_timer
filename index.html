@@ -25,13 +25,13 @@
     <body>
 
         <!-- Countdown timer html -->
-        <div class="countdown-bar" id="CountdownA">
+        <div class="countdown-bar" id="countdownA">
             <div></div>
             <div></div>
         </div>
 
         <!-- Countdown timer html -->
-        <div class="countdown-bar" id="CountdownB">
+        <div class="countdown-bar" id="countdownB">
             <div></div>
             <div></div>
         </div>
@@ -42,7 +42,10 @@
         
         <script type="text/javascript">
             $(document).ready(function () {
-                countdownTimer();
+                countdown('countdownA', 0, 1, 0, 15);
+
+                countdown('countdownB', 0, 0, 0, 10);
+
             });
         </script>
         <!-- End script -->
