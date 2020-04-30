@@ -1,38 +1,39 @@
 /**
- * SET YOUR CONFIG HERE
+ * Config Settings
  */
 function config() {
     
     var $config = [];
     
-    // General
-    $config['loadingBar_id'] = 'countdown-bar';
-    $config['loadingBarloader_id'] = 'countdown-bar-loader';
-    $config['loading_timer_id'] = 'countdown-timer';
     
-    $config['endtime_message'] = 'Timer expired!';
+    /**
+     * Default General Settings
+     * @todo: get these ID's from the elements starting with class countdown-bar)
+     * 
+     */
+    $loadingBars = 'countdown-bar';
+   
+    // Countdown Loading Bar
+    $loadingBars_width = 200;
+    $loadingBars_height = 20;
+    $loadingBars_border_color = 'blue';
+    $loadingBars_color =  'darkblue';
+    $loadingBars_background_color =  'lightblue';
+    $config.finished_message = '';
     
-
-    // Countdown bar
-    $config['loadingBar_width'] = 200;
-    $config['loadingBar_height'] = 20;
+    // Countdown Timer
+    $config.timer_color = 'blue';
+    $config.timer_font_weight = 700;
+    $config.timer_font = 'Verdana';
+    $config.timer_font_size = 12;
+    $config.endtime_message = 'Timer expired!';
     
-    $config['loadingBar_border_color'] = 'blue';
-    $config['loadingBar_color'] =  'darkblue';
-    $config['loadingBar_background_color'] =  'blue';
-    $config['finished_message'] = '';
-
-    // Countdown timer font
-    $config['timer_color'] = 'blue';
-    $config['timer_font_weight'] = 700;
-    $config['timer_font'] = 'Verdana';
-    $config['timer_font_size'] = 12;
     
     // DEFAULT TIME IS 20 SECONDS
-    $config['days_add'] = 0;
-    $config['hours_add'] = 0;
-    $config['minutes_add'] = 0;
-    $config['seconds_add'] = 20;
+    $config.days_add = 0;
+    $config.hours_add = 0;
+    $config.minutes_add = 0;
+    $config.seconds_add = 20;
 
     return $config;
 }
@@ -47,16 +48,32 @@ function countdownTimer() {
 
     $config = this.config();
 
-    //set bar-settings
-    $("#" + $config.loadingBar_id).css('width', $config.loadingBar_width);
-    $("#" + $config.loadingBar_id).css('height', $config.loadingBar_height);
-    $("#" + $config.loadingBar_id).css('background-color', $config.loadingBar_background_color);
-    $("#" + $config.loadingBarloader_id).css('background-color', $config.loadingBar_color);
+    
+    $loadingBars = $('.countdown-bar');
+    
+    // foreach through the loadingbars
+    
+    $.each($('.countdown-bar'), function( index, value ) {
+        console.log('show shit' + index);
 
-    $("#" + $config.loadingBar_id).css('border-color', $config.loadingBar_border_color);
+
+        $loadingBars_loader = $($loadingBars[index]).children('div')[0];
+        $loadingBars_timer = $($loadingBars[index]).children('div')[1];
+    
+        $($loadingBars).css('width', $loadingBars_width);
+        $($loadingBars).css('height', $loadingBars_height);
+        $($loadingBars).css('background-color', $loadingBars_background_color);
+    
+    });
+    
+    
+
+    //set bar-settings
+    $($loadingBars_loader).css('background-color', $loadingBars_color);
+
+    $($loadingBars).css('border-color', $loadingBars_border_color);
 
  
-
     // Set the date we're counting down to
     $dateNow = new Date();
     $hour = $dateNow.getHours();
@@ -75,7 +92,7 @@ function countdownTimer() {
     $distance = $countDownDate - $now;
     
     // Calculate loadingBar_part width per second
-    $distance_loadingBar_part =  (($config.loadingBar_width / ($distance - 1000)) * 1000);
+    $distance_loadingBar_part =  (($loadingBars_width / ($distance - 1000)) * 1000);
     $distance_loadingBar_part = Math.ceil($distance_loadingBar_part * 100) / 100;
     
     if($timerLocation == 'top') {
@@ -117,22 +134,20 @@ function countdownTimer() {
             $distance = 0;
         }
         
-        if($countdownBarWidth < $config.loadingBar_width) {
+        if($countdownBarWidth < $loadingBars_width) {
             // Update the timer div HTML contents to the new time
             $timerHtml = $timerHtmlStart + 'Time left: ' + $timer + $timerHtmlEnd;
-            $("#" + $config.loading_timer_id).html($timerHtml);
-
+            $($loadingBars_timer).html($timerHtml);
 
             // Make this a function so it both loads simultanious?
-            $("#" + $config.loadingBar_id + ' #countdown-bar-loader').animate({ width: $countdownBarWidth + 'px' }, 500);
-        
+            $($loadingBars_loader).animate({ width: $countdownBarWidth + 'px' }, 500);
     
         } else {
-            $("#" + $config.loadingBar_id + ' #countdown-bar-loader').animate({ width: '100%' }, 500);
+            $($loadingBars_loader).animate({ width: '100%' }, 500);
             clearInterval($countdownInterval);
             
             $timerHtml = $timerHtmlStart + $config.endtime_message + $timerHtmlEnd;
-            $("#" + $config.loading_timer_id).html($timerHtml);
+            $($loadingBars_timer).html($timerHtml);
         }
         
 
