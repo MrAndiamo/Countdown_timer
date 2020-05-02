@@ -14,7 +14,6 @@ function config() {
     $config.loadingBars_border_color = 'blue';
     $config.loadingBars_color =  'darkblue';
     $config.loadingBars_background_color =  'lightblue';
-    $config.finished_message = '';
     
     // Countdown Timer
     $config.timer_color = 'blue';
@@ -61,6 +60,9 @@ function countdown($element, $daysAdd, $hoursAdd, $minutesAdd, $secondsAdd) {
         
     var interval = setInterval(function() {
 
+        $loadingBars_loader = $('#' + $element).children('div')[0];
+        $loadingBars_timer = $('#' + $element).children('div')[1];      
+
         $countDownDate = $dateNow.setDate($dateNow.getDate() + $daysAdd);
         $countDownDate = $dateNow.setHours($hour + $hoursAdd);
         $countDownDate = $dateNow.setMinutes($minute + $minutesAdd);
@@ -69,16 +71,15 @@ function countdown($element, $daysAdd, $hoursAdd, $minutesAdd, $secondsAdd) {
         $now = new Date().getTime();    
         $distance = $countDownDate - $now;
         
-        $loadingBars_loader = $('#' + $element).children('div')[0];
-        $loadingBars_timer = $('#' + $element).children('div')[1];      
-
+        
         $distance_loader = $countDownDate - $now_loader;
         $distance_loadingBar_part =  (($config.loadingBars_width / ($distance_loader - 1000)) * 1000);
-        $distance_loadingBar_part = Math.ceil($distance_loadingBar_part * 100) / 100;
+        $distance_loadingBar_part = Math.floor($distance_loadingBar_part * 10000) / 10000;
         
         $secondsPast = parseInt(($distance_loader - $distance) / 1000);
         
         $newDistance  = $distance_loadingBar_part * $secondsPast;
+        console.log($newDistance);
         if($newDistance > $config.loadingBars_width) $newDistance = $config.loadingBars_width;
         
         $($loadingBars_loader).animate({ width: $newDistance + 'px' }, 500);
